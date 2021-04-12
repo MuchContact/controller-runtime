@@ -42,7 +42,11 @@ func main() {
 
 	// Setup a Manager
 	entryLog.Info("setting up manager")
-	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{})
+	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
+		CertDir: "/Users/muco/Workspaces/VagrantWs/ubuntu",
+		Host:    "192.168.50.1",
+		Port:    9443,
+	})
 	if err != nil {
 		entryLog.Error(err, "unable to set up overall controller manager")
 		os.Exit(1)

@@ -15,6 +15,11 @@ This example implements a custom controller and webhooks for the *existing* Repl
     3. Registers the mutating and validating webhooks with the manager
     4. Starts the manager
 
+1. 修改gen-admission-secret.sh文件中IP.1 = 192.168.50.1为对应ip，生成ca和server证书; 否则k8s报证书错误，webhook server采用单向tls认证，所以需要本工程的证书和访问地址匹配
+1. 替换caBunddle为server.crt的base64编码，k8s集群执行manifests.yaml
+1. 运行代码
+1. 测试，部署任意pod，查看annotation是否添加成功
+
 ### crd/
 
 This example implements a *new* Kubernetes resource, ChaosPod, and creates a custom controller that watches it and webhooks that mutate and validate.
