@@ -43,7 +43,7 @@ func main() {
 	// Setup a Manager
 	entryLog.Info("setting up manager")
 	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
-		CertDir: "/Users/muco/Workspaces/VagrantWs/ubuntu",
+		CertDir: "/Users/muco/Workspaces/gows/controller-runtime/cert/",
 		Host:    "192.168.50.1",
 		Port:    9443,
 	})

@@ -58,7 +58,7 @@ if [[ ! -x "$(command -v openssl)" ]]; then
     exit 1
 fi
 
-CERTDIR=/tmp
+CERTDIR=/Users/muco/Workspaces/gows/controller-runtime/cert
 
 function createCerts() {
   echo "creating certs in dir ${CERTDIR} "
@@ -81,21 +81,21 @@ DNS.3 = ${SERVICE}.${NAMESPACE}.svc
 EOF
 
   openssl genrsa -out ${CERTDIR}/ca.key 2048
-  openssl req -x509 -new -nodes -key ${CERTDIR}/ca.key -subj "/CN=${SERVICE}.${NAMESPACE}.svc" -out ${CERTDIR}/ca.crt
+  openssl req -x509 -new -newkey rsa:4096 -sha256 -nodes -key ${CERTDIR}/ca.key -subj "/CN=myca.${NAMESPACE}.svc" -days 10000 -out ${CERTDIR}/ca.crt
 
-  openssl genrsa -out ${CERTDIR}/server.key 2048
-  openssl req -new -key ${CERTDIR}/server.key -subj "/CN=${SERVICE}.${NAMESPACE}.svc" -out ${CERTDIR}/server.csr -config ${CERTDIR}/csr.conf
+  openssl genrsa -out ${CERTDIR}/tls.key 2048
+  openssl req -new -key ${CERTDIR}/tls.key -subj "/CN=${SERVICE}.${NAMESPACE}.svc" -out ${CERTDIR}/tls.csr -config ${CERTDIR}/csr.conf
 
-  openssl x509 -req -in  ${CERTDIR}/server.csr -CA  ${CERTDIR}/ca.crt -CAkey  ${CERTDIR}/ca.key \
-  -CAcreateserial -out  ${CERTDIR}/server.crt \
+  openssl x509 -req -sha256 -in  ${CERTDIR}/tls.csr -CA  ${CERTDIR}/ca.crt -CAkey  ${CERTDIR}/ca.key \
+  -CAcreateserial -out  ${CERTDIR}/tls.crt \
   -extensions v3_req -extfile  ${CERTDIR}/csr.conf
 }
 
 #function createSecret() {
 #  # create the secret with CA cert and server cert/key
 #  kubectl create secret generic ${SECRET} \
-#      --from-file=tls.key=${CERTDIR}/server.key \
-#      --from-file=tls.crt=${CERTDIR}/server.crt \
+#      --from-file=tls.key=${CERTDIR}/tls.key \
+#      --from-file=tls.crt=${CERTDIR}/tls.crt \
 #      --from-file=ca.crt=${CERTDIR}/ca.crt \
 #      -n ${NAMESPACE}
 #}
